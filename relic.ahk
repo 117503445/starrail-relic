@@ -50,6 +50,7 @@ click_lock(){
 
           click_with_sleep(360, 508)
           Send "{WheelDown 25}"
+          sleep(300)
         }
     }
 
@@ -65,6 +66,6 @@ click_lock(){
             click_lock()
             i := i + 1
         }
-        j := j - 1
+        j := j + 1
     }
   }

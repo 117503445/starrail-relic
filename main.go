@@ -4,31 +4,25 @@ import (
 	"fmt"
 
 	"github.com/go-vgo/robotgo"
+	hook "github.com/robotn/gohook"
 )
 
 func main() {
 	robotgo.MouseSleep = 100
 
-	robotgo.ScrollDir(10, "up")
-	robotgo.ScrollDir(20, "right")
+	fmt.Println("--- Please press ctrl + shift + q to stop hook ---")
+	hook.Register(hook.KeyDown, []string{"q", "ctrl", "shift"}, func(e hook.Event) {
+		fmt.Println("ctrl-shift-q")
+		hook.End()
+	})
 
-	robotgo.Scroll(0, -10)
-	robotgo.Scroll(100, 0)
+	fmt.Println("--- Please press w---")
+	hook.Register(hook.KeyDown, []string{"w"}, func(e hook.Event) {
+		fmt.Println("w")
+	})
 
-	robotgo.MilliSleep(100)
-	robotgo.ScrollSmooth(-10, 6)
-	// robotgo.ScrollRelative(10, -100)
-
-	robotgo.Move(10, 20)
-	robotgo.MoveRelative(0, -10)
-	robotgo.DragSmooth(10, 10)
-
-	robotgo.Click("wheelRight")
-	robotgo.Click("left", true)
-	robotgo.MoveSmooth(100, 200, 1.0, 10.0)
-
-	robotgo.Toggle("left")
-	robotgo.Toggle("left", "up")
+	s := hook.Start()
+	<-hook.Process(s)
 
 	fmt.Println("Press enter to exit")
 	// python input() to prevent the program from exiting immediately

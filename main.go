@@ -2,19 +2,70 @@ package main
 
 import (
 	"fmt"
+	// "image"
 	"os"
 	"time"
 
 	"github.com/117503445/gorobot-demo/internal/cv"
+	"github.com/117503445/goutils"
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
+	"github.com/rs/zerolog/log"
 )
 
-func main() {
-	fmt.Println("2024.8.3 11:57")
+var logsDir string
 
-	robotgo.MouseSleep = 100
-	robotgo.KeySleep = 100
+func AltWCallback() {
+	img := robotgo.CaptureImg()
+
+	imgFile := fmt.Sprintf("%s/%s.png", logsDir, time.Now().Format("20060102.150405"))
+	if err := robotgo.Save(img, imgFile); err != nil {
+		log.Fatal().Err(err).Msg("robotgo.Save")
+	}
+
+	// 轮换遗器槽
+	points := cv.GetRelicPoints()
+	for _, p := range points {
+		robotgo.Move(p.X/2, p.Y/2)
+		robotgo.Click()
+	}
+
+	// 选中当前未选中的遗器
+	// points := cv.GetUnlockedPoints(img)
+	// log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
+	// for _, p := range points {
+	// 	robotgo.Move(p.X/2, p.Y/2)
+	// 	robotgo.Click()
+	// 	robotgo.Move(3726/2, 394/2)
+	// 	robotgo.Click()
+	// }
+
+	// // 取消选择所有仪器
+	// go func() {
+	// 	robotgo.Move(3624/2, 546/2)
+	// 	for {
+	// 		// time.Sleep(3 * time.Second)
+	// 		robotgo.Click()
+	// 		time.Sleep(3 * time.Second)
+	// 		// robotgo.KeyTap("d")
+	// 		// time.Sleep(3 * time.Second)
+	// 	}
+	// }()
+}
+
+func main() {
+	goutils.InitZeroLog()
+	// runID as a unique identifier for the current run, filename
+	// 20240803.203942
+	runID := time.Now().Format("20060102.150405")
+
+	logsDir = fmt.Sprintf("logs/%s", runID)
+	if err := os.MkdirAll(logsDir, os.ModePerm); err != nil {
+		log.Fatal().Err(err).Msg("os.MkdirAll")
+	}
+
+	robotgo.MouseSleep = 1000
+	robotgo.KeySleep = 1000
 
 	fmt.Println("--- Please press ctrl + shift + q to stop hook ---")
 	hook.Register(hook.KeyDown, []string{"q", "ctrl", "shift"}, func(e hook.Event) {
@@ -28,47 +79,7 @@ func main() {
 
 	fmt.Println("--- Please press alt+w---")
 	hook.Register(hook.KeyDown, []string{"alt", "w"}, func(e hook.Event) {
-
-		img := robotgo.CaptureImg()
-		points := cv.GetUnlockedPoints(img)
-		for _, p := range points {
-			robotgo.Move(p.X/2, p.Y/2)
-			time.Sleep(3 * time.Second)
-			robotgo.Click()
-			time.Sleep(3 * time.Second)
-			robotgo.Move(980, 540)
-			time.Sleep(3 * time.Second)
-			robotgo.Click()
-			time.Sleep(3 * time.Second)
-			robotgo.Move(3726/2, 394/2)
-			time.Sleep(3 * time.Second)
-		}
-		// 3726, 394
-
-		// // 取消选择所有仪器
-		// go func() {
-		// 	robotgo.Move(3624/2, 546/2)
-		// 	for {
-		// 		// time.Sleep(3 * time.Second)
-		// 		robotgo.Click()
-		// 		time.Sleep(3 * time.Second)
-		// 		// robotgo.KeyTap("d")
-		// 		// time.Sleep(3 * time.Second)
-		// 	}
-		// }()
-
-		// c += 1
-		// name := fmt.Sprintf("%d.png", c)
-
-		// var err error
-
-		// // x, y, w, h
-		// img := robotgo.CaptureImg()
-		// err = robotgo.Save(img, name)
-		// if err = robotgo.Save(img, name); err != nil {
-		// 	panic(err)
-		// }
-
+		go AltWCallback()
 	})
 
 	s := hook.Start()

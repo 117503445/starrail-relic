@@ -5,8 +5,6 @@ import (
 
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
-
-	"github.com/vcaesar/gcv"
 )
 
 func main() {
@@ -17,13 +15,13 @@ func main() {
 
 	var err error
 
-	img := robotgo.CaptureScreen(10, 10, 30, 30)
+	img := robotgo.CaptureImg(10, 10, 30, 30)
 	err = robotgo.Save(img, name)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	img1 := robotgo.CaptureScreen()
+	img1 := robotgo.CaptureImg()
 	err = robotgo.Save(img1, name1)
 	if err != nil {
 		fmt.Println(err)
@@ -31,10 +29,6 @@ func main() {
 
 	// robotgo.SaveCapture(name1, 10, 10, 30, 30)
 	// robotgo.SaveCapture(name)
-
-	fmt.Print("gcv find image: ")
-	fmt.Println(gcv.FindImgFile(name1, name))
-	fmt.Println(gcv.FindAllImgFile(name1, name))
 
 	robotgo.MouseSleep = 100
 

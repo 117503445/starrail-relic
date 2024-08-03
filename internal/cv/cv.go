@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"image/draw"
 
-	// "github.com/go-vgo/robotgo"
 	"github.com/rs/zerolog/log"
 )
 

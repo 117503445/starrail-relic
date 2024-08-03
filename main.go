@@ -15,42 +15,64 @@ import (
 
 var logsDir string
 
-func AltWCallback() {
-	img := robotgo.CaptureImg()
+func AltWCallback(e hook.Event) {
+	go func() {
+		c := 0
+		for {
+			c += 1
+			robotgo.MoveClick(129/2, 2008/2)
+			if c%4 == 0 {
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("s")
+			} else {
+				robotgo.KeyTap("d")
+			}
+			robotgo.MoveClick(1472/2, 584/2)
+			robotgo.MoveClick(1472/2, 584/2)
 
-	imgFile := fmt.Sprintf("%s/%s.png", logsDir, time.Now().Format("20060102.150405"))
-	if err := robotgo.Save(img, imgFile); err != nil {
-		log.Fatal().Err(err).Msg("robotgo.Save")
-	}
+			// 轮换遗器槽
+			points := cv.GetRelicPoints()
+			for _, p := range points {
+				robotgo.Move(p.X/2, p.Y/2)
+				robotgo.Click()
 
-	// 轮换遗器槽
-	points := cv.GetRelicPoints()
-	for _, p := range points {
-		robotgo.Move(p.X/2, p.Y/2)
-		robotgo.Click()
-	}
+				img := robotgo.CaptureImg()
 
-	// 选中当前未选中的遗器
-	// points := cv.GetUnlockedPoints(img)
-	// log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
-	// for _, p := range points {
-	// 	robotgo.Move(p.X/2, p.Y/2)
-	// 	robotgo.Click()
-	// 	robotgo.Move(3726/2, 394/2)
-	// 	robotgo.Click()
-	// }
+				imgFile := fmt.Sprintf("%s/%s.png", logsDir, time.Now().Format("20060102.150405"))
+				if err := robotgo.Save(img, imgFile); err != nil {
+					log.Fatal().Err(err).Msg("robotgo.Save")
+				}
 
-	// // 取消选择所有仪器
-	// go func() {
-	// 	robotgo.Move(3624/2, 546/2)
-	// 	for {
-	// 		// time.Sleep(3 * time.Second)
-	// 		robotgo.Click()
-	// 		time.Sleep(3 * time.Second)
-	// 		// robotgo.KeyTap("d")
-	// 		// time.Sleep(3 * time.Second)
-	// 	}
-	// }()
+				// 选中当前未选中的遗器
+				points := cv.GetUnlockedPoints(img)
+				log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
+				for _, p := range points {
+					robotgo.Move(p.X/2, p.Y/2)
+					robotgo.Click()
+					robotgo.Move(3726/2, 394/2)
+					robotgo.Click()
+				}
+			}
+
+			robotgo.KeyTap("esc")
+		}
+	}()
+}
+
+func AltFCallback(e hook.Event) {
+	// 取消选择所有仪器
+	go func() {
+		robotgo.Move(3624/2, 546/2)
+		for {
+			// time.Sleep(3 * time.Second)
+			
+			robotgo.Click()
+			// robotgo.KeyTap("d")
+			// time.Sleep(3 * time.Second)
+		}
+	}()
 }
 
 func main() {
@@ -67,9 +89,7 @@ func main() {
 	robotgo.MouseSleep = 1000
 	robotgo.KeySleep = 1000
 
-	fmt.Println("--- Please press ctrl + shift + q to stop hook ---")
-	hook.Register(hook.KeyDown, []string{"q", "ctrl", "shift"}, func(e hook.Event) {
-		fmt.Println("ctrl-shift-q")
+	hook.Register(hook.KeyDown, []string{"alt", "a"}, func(e hook.Event) {
 		os.Exit(1)
 		hook.End()
 		// exit(0)
@@ -78,9 +98,8 @@ func main() {
 	// c := 0
 
 	fmt.Println("--- Please press alt+w---")
-	hook.Register(hook.KeyDown, []string{"alt", "w"}, func(e hook.Event) {
-		go AltWCallback()
-	})
+	hook.Register(hook.KeyDown, []string{"alt", "w"}, AltWCallback)
+	hook.Register(hook.KeyDown, []string{"alt", "f"}, AltFCallback)
 
 	s := hook.Start()
 	<-hook.Process(s)

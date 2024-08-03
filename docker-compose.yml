@@ -1,14 +1,14 @@
 services:
-  gorobot-demo-dev:
+  starrail-relic-dev:
     build:
       context: ./
       dockerfile: Dockerfile.dev
     volumes:
         - ./:/workspace
         - /var/run/docker.sock:/var/run/docker.sock
-        - gorobot-demo-dev-vsc:/root/.vscode-server
+        - starrail-relic-dev-vsc:/root/.vscode-server
     stdin_open: true
     tty: true
 
 volumes:
-  gorobot-demo-dev-vsc:
+  starrail-relic-dev-vsc:

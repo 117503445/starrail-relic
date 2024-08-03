@@ -8,24 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("2024.8.3 10:05")
-
-	name := "test.png"
-	name1 := "test_001.png"
-
-	var err error
-
-	img := robotgo.CaptureImg(10, 10, 30, 30)
-	err = robotgo.Save(img, name)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	img1 := robotgo.CaptureImg()
-	err = robotgo.Save(img1, name1)
-	if err != nil {
-		fmt.Println(err)
-	}
+	fmt.Println("2024.8.3 11:57")
 
 	// robotgo.SaveCapture(name1, 10, 10, 30, 30)
 	// robotgo.SaveCapture(name)
@@ -38,15 +21,27 @@ func main() {
 		hook.End()
 	})
 
+	c := 0
+
 	fmt.Println("--- Please press w---")
 	hook.Register(hook.KeyDown, []string{"w"}, func(e hook.Event) {
-		fmt.Println("w")
+		c += 1
+		name := fmt.Sprintf("%d.png", c)
+
+		var err error
+
+		// x, y, w, h
+		img := robotgo.CaptureImg()
+		err = robotgo.Save(img, name)
+		if err = robotgo.Save(img, name); err != nil {
+			panic(err)
+		}
 	})
 
 	s := hook.Start()
 	<-hook.Process(s)
 
-	fmt.Println("Press enter to exit")
-	// python input() to prevent the program from exiting immediately
-	fmt.Scanln()
+	// fmt.Println("Press enter to exit")
+	// // python input() to prevent the program from exiting immediately
+	// fmt.Scanln()
 }

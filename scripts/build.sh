@@ -5,4 +5,4 @@
 set -e
 
 docker build -t starrail-relic-builder -f Dockerfile.builder .
-docker run --rm -it -v $PWD:/workspace starrail-relic-builder
+docker run --rm -v $PWD:/workspace starrail-relic-builder

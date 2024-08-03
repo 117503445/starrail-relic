@@ -4,6 +4,9 @@ COPY ./debian.sources /etc/apt/sources.list.d/debian.sources
 
 RUN apt-get update && apt-get install -y gcc-multilib gcc-mingw-w64 libz-mingw-w64-dev
 
+# Bitmap
+RUN apt install -y libpng++-dev
+
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 
 ENTRYPOINT ["/workspace/bin.sh"]

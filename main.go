@@ -5,9 +5,37 @@ import (
 
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
+
+	"github.com/vcaesar/gcv"
 )
 
 func main() {
+	fmt.Println("2024.8.3 10:05")
+
+	name := "test.png"
+	name1 := "test_001.png"
+
+	var err error
+
+	img := robotgo.CaptureScreen(10, 10, 30, 30)
+	err = robotgo.Save(img, name)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	img1 := robotgo.CaptureScreen()
+	err = robotgo.Save(img1, name1)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// robotgo.SaveCapture(name1, 10, 10, 30, 30)
+	// robotgo.SaveCapture(name)
+
+	fmt.Print("gcv find image: ")
+	fmt.Println(gcv.FindImgFile(name1, name))
+	fmt.Println(gcv.FindAllImgFile(name1, name))
+
 	robotgo.MouseSleep = 100
 
 	fmt.Println("--- Please press ctrl + shift + q to stop hook ---")

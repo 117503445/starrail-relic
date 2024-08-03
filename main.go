@@ -19,17 +19,7 @@ func AltWCallback(e hook.Event) {
 	go func() {
 		c := 0
 		for {
-			c += 1
-			robotgo.MoveClick(129/2, 2008/2)
-			if c%4 == 0 {
-				robotgo.KeyTap("a")
-				robotgo.KeyTap("a")
-				robotgo.KeyTap("a")
-				robotgo.KeyTap("s")
-			} else {
-				robotgo.KeyTap("d")
-			}
-			robotgo.MoveClick(1472/2, 584/2)
+
 			robotgo.MoveClick(1472/2, 584/2)
 
 			// 轮换遗器槽
@@ -38,12 +28,16 @@ func AltWCallback(e hook.Event) {
 				robotgo.Move(p.X/2, p.Y/2)
 				robotgo.Click()
 
+				time.Sleep(1 * time.Second)
+
 				img := robotgo.CaptureImg()
 
 				imgFile := fmt.Sprintf("%s/%s.png", logsDir, time.Now().Format("20060102.150405"))
 				if err := robotgo.Save(img, imgFile); err != nil {
 					log.Fatal().Err(err).Msg("robotgo.Save")
 				}
+
+				log.Debug().Str("imgFile", imgFile).Msg("CaptureImg")
 
 				// 选中当前未选中的遗器
 				points := cv.GetUnlockedPoints(img)
@@ -57,6 +51,17 @@ func AltWCallback(e hook.Event) {
 			}
 
 			robotgo.KeyTap("esc")
+			c += 1
+			robotgo.MoveClick(129/2, 2008/2)
+			if c%4 == 0 {
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("a")
+				robotgo.KeyTap("s")
+			} else {
+				robotgo.KeyTap("d")
+			}
+			robotgo.MoveClick(1472/2, 584/2)
 		}
 	}()
 }
@@ -67,7 +72,7 @@ func AltFCallback(e hook.Event) {
 		robotgo.Move(3624/2, 546/2)
 		for {
 			// time.Sleep(3 * time.Second)
-			
+
 			robotgo.Click()
 			// robotgo.KeyTap("d")
 			// time.Sleep(3 * time.Second)
@@ -86,8 +91,8 @@ func main() {
 		log.Fatal().Err(err).Msg("os.MkdirAll")
 	}
 
-	robotgo.MouseSleep = 1000
-	robotgo.KeySleep = 1000
+	robotgo.MouseSleep = 200
+	robotgo.KeySleep = 200
 
 	hook.Register(hook.KeyDown, []string{"alt", "a"}, func(e hook.Event) {
 		os.Exit(1)

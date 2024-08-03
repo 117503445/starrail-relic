@@ -81,6 +81,7 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 
 				}
 			}
+			log.Debug().Int("blackCount", blackCount).Int("whiteCount", whiteCount).Msg("color count")
 			if blackCount > 200 && whiteCount > 100 {
 				// locked
 			} else {

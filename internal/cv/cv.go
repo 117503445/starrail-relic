@@ -1,7 +1,6 @@
 package cv
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -37,31 +36,53 @@ func DrawRect(img *image.RGBA, rect image.Rectangle, col color.Color, thickness 
 	}
 }
 
-// row: 第几行
-// column: 第几列
-func DrawR(row int, column int) image.Rectangle {
-	x := 258 + 250*(column-1)
-	y := 551 + (849-551)*(row-1)
-	return image.Rect(x, y, x+38, y+43)
+func tranXFrom4KTo1080p(img image.Image, x int) int {
+	return x * img.Bounds().Max.X / 3840
 }
 
-// 获取未锁定的 point 列表
+func tranYFrom4KTo1080p(img image.Image, y int) int {
+	return y * img.Bounds().Max.Y / 2160
+}
+
+// getRect: 获取指定行列遗器锁定按钮的矩形区域，1080p 分辨率下的绝对坐标
+// row: 第几行
+// column: 第几列
+func getRect(img image.Image, row int, column int) image.Rectangle {
+	x := 258 + 250*(column-1)
+	log.Debug().Int("x", x).Msg("getRect")
+	x = tranXFrom4KTo1080p(img, x)
+	log.Debug().Int("x", x).Msg("getRect after tran")
+
+	y := 551 + (849-551)*(row-1)
+	y = tranYFrom4KTo1080p(img, y)
+
+	w := 38
+	w = tranXFrom4KTo1080p(img, w)
+	h := 43
+	h = tranYFrom4KTo1080p(img, h)
+
+	return image.Rect(x, y, x+w, y+h)
+}
+
+// 获取未锁定的 point 列表，返回 1080p 分辨率下的绝对坐标
 func GetUnlockedPoints(img image.Image) []image.Point {
 	if img == nil {
 		log.Fatal().Msg("img is nil")
 	}
+	log.Debug().Int("width", img.Bounds().Max.X).Int("height", img.Bounds().Max.Y).Msg("GetUnlockedPoints")
 
-	log.Debug().Interface("color mode", img.ColorModel()).Msg("color mode")
+	// log.Debug().Interface("color mode", img.ColorModel()).Msg("color mode")
 	rgba := image.NewRGBA(img.Bounds())
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{}, draw.Src)
 	points := []image.Point{}
 
-	// 在 4k 分辨率下，200% 缩放，黑色 白色 一般是 600 左右，这里设置 300 作为阈值
+	// 在 4k 分辨率下，200% 缩放，黑色 白色 一般是 600 左右
+	// 这里设置 300 作为阈值
 	threshold := 300 * img.Bounds().Max.X / 3840 * img.Bounds().Max.Y / 2160
 
 	for r := 1; r <= 5; r++ {
 		for c := 1; c <= 4; c++ {
-			rect := DrawR(r, c)
+			rect := getRect(img, r, c)
 
 			blackCount := 0
 			whiteCount := 0
@@ -89,7 +110,10 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 			if blackCount > threshold && whiteCount > threshold {
 				// locked
 			} else {
-				points = append(points, image.Point{X: rect.Min.X, Y: rect.Min.Y})
+				// points = append(points, image.Point{X: rect.Min.X, Y: rect.Min.Y})
+				point := image.Point{X: tranXFrom4KTo1080p(img, rect.Min.X), Y: tranYFrom4KTo1080p(img, rect.Min.Y)}
+				points = append(points, point)
+				log.Debug().Interface("point", point).Msg("GetUnlockedPoints")
 			}
 		}
 	}
@@ -97,13 +121,14 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 	return points
 }
 
-// 获取遗器槽的坐标, 4k 分辨率 200% 缩放
-func GetRelicPoints() []image.Point {
+// 获取遗器槽的坐标, 1080p 分辨率下的绝对坐标
+func GetRelicPoints(img image.Image) []image.Point {
 	points := []image.Point{}
 	// (269,280), (406,288)
 
 	for i := 0; i < 6; i++ {
 		x, y := 269+137*i, 280
+		x, y = tranXFrom4KTo1080p(img, x), tranYFrom4KTo1080p(img, y)
 		points = append(points, image.Point{X: x, Y: y})
 	}
 

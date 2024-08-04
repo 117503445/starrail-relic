@@ -43,10 +43,12 @@ func AltWCallback(e hook.Event) {
 		for {
 			robotgo.MoveClick(1472/2, 584/2)
 
+			img := robotgo.CaptureImg()
+
 			// 轮换遗器槽
-			points := cv.GetRelicPoints()
+			points := cv.GetRelicPoints(img)
 			for _, p := range points {
-				robotgo.Move(p.X/2, p.Y/2)
+				robotgo.Move(p.X, p.Y)
 				robotgo.Click()
 
 				// 等待加载
@@ -65,7 +67,7 @@ func AltWCallback(e hook.Event) {
 				points := cv.GetUnlockedPoints(img)
 				log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
 				for _, p := range points {
-					robotgo.Move(p.X/2, p.Y/2)
+					robotgo.Move(p.X, p.Y)
 					robotgo.Click()
 					robotgo.Move(3726/2, 394/2)
 					robotgo.Click()
@@ -126,8 +128,8 @@ func main() {
 
 	fmt.Println(`使用方法:
 	alt + a: 退出程序
-	alt + f: 解锁所有遗器。请先打开星穹铁道，进入 背包 - 遗器 页面，再按下此快捷键。当所有遗器都被解锁后，按下 alt + a 退出程序。
-	alt + w: 锁定每个角色前 20 个推荐的遗器。请先打开星穹铁道，进入 角色详情 - 第一个角色 - 遗器 页面，再按下此快捷键。当所有遗器都被锁定后，按下 alt + a 退出程序。
+	alt + f: 解锁所有遗器。请先打开星穹铁道，进入 背包 - 遗器 页面，筛选 - 状态 - 已锁定，再按下 alt + f 快捷键。当所有遗器都被解锁后，按下 alt + a 退出程序。
+	alt + w: 锁定每个角色前 20 个推荐的遗器。请先打开星穹铁道，进入 角色详情 - 第一个角色 - 遗器 页面，再按下 alt + w 快捷键。当所有遗器都被锁定后，按下 alt + a 退出程序。
 	`)
 
 	robotgo.MouseSleep = 200

@@ -6,11 +6,13 @@ import (
 	"time"
 
 	_ "embed"
-	"github.com/117503445/gorobot-demo/internal/cv"
 	"github.com/117503445/goutils"
+	"github.com/117503445/starrail-relic/internal/cv"
+	"github.com/gen2brain/beeep"
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
 	"github.com/rs/zerolog/log"
+	"sync/atomic"
 )
 
 var logsDir string
@@ -18,9 +20,23 @@ var logsDir string
 //go:embed version.json
 var versionInfo string
 
+var isRunning atomic.Bool
+
+func notify(message string) {
+	if err := beeep.Notify("starrail-relic", message, ""); err != nil {
+		log.Fatal().Err(err).Msg("beeep.Notify")
+	}
+}
+
 func AltWCallback(e hook.Event) {
-	// TODO: 避免争抢
+	if !isRunning.CompareAndSwap(false, true) {
+		notify("任务进行中，无法执行其他任务")
+		return
+	}
+
 	go func() {
+		notify("锁定每个角色前 20 个推荐的遗器")
+
 		c := 0
 		for {
 			robotgo.MoveClick(1472/2, 584/2)
@@ -70,8 +86,15 @@ func AltWCallback(e hook.Event) {
 }
 
 func AltFCallback(e hook.Event) {
+	if !isRunning.CompareAndSwap(false, true) {
+		notify("任务进行中，无法执行其他任务")
+		return
+	}
+
 	// 取消选择所有仪器
 	go func() {
+		notify("解锁所有遗器")
+
 		robotgo.Move(3624/2, 546/2)
 		for {
 			robotgo.Click()
@@ -102,6 +125,8 @@ func main() {
 	robotgo.KeySleep = 200
 
 	hook.Register(hook.KeyDown, []string{"alt", "a"}, func(e hook.Event) {
+		notify("退出程序")
+
 		// TODO: use channel
 		os.Exit(1)
 		hook.End()

@@ -12,7 +12,7 @@ import (
 
 	_ "embed"
 
-	"github.com/117503445/gorobot-demo/internal/cv"
+	"github.com/117503445/starrail-relic/internal/cv"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 )

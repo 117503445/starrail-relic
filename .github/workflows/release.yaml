@@ -36,6 +36,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            gorobot-demo.exe
+            starrail-relic.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

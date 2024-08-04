@@ -6,19 +6,21 @@ import (
 	"time"
 
 	_ "embed"
+	"sync/atomic"
+
 	"github.com/117503445/goutils"
 	"github.com/117503445/starrail-relic/internal/cv"
+	"github.com/117503445/starrail-relic/internal/lowos"
 	"github.com/gen2brain/beeep"
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
 	"github.com/rs/zerolog/log"
-	"sync/atomic"
 )
 
 var logsDir string
 
 //go:embed version.json
-var versionInfo string
+var versionInfo []byte
 
 var isRunning atomic.Bool
 
@@ -105,7 +107,13 @@ func AltFCallback(e hook.Event) {
 func main() {
 	goutils.InitZeroLog()
 
-	log.Info().Str("versionInfo", versionInfo).Msg("")
+	log.Info().RawJSON("versionInfo", versionInfo).Msg("")
+
+	if !lowos.IsAdmin() {
+		log.Error().Msg("请以管理员身份运行")
+		fmt.Scanln()
+		os.Exit(1)
+	}
 
 	// runID as a unique identifier for the current run, example: 20240803.203942
 	runID := time.Now().Format("20060102.150405")

@@ -3,13 +3,14 @@ module github.com/117503445/gorobot-demo
 go 1.22.5
 
 require (
+	github.com/117503445/goutils v0.0.0-20240727145325-52e6159fc3a2
 	github.com/go-vgo/robotgo v1.0.0-rc2.1
 	github.com/robotn/gohook v0.41.0
+	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.9.0
 )
 
 require (
-	github.com/117503445/goutils v0.0.0-20240727145325-52e6159fc3a2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -37,7 +38,6 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934 // indirect
 	github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.24.7 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

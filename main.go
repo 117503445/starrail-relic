@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	_ "embed"
 	"github.com/117503445/gorobot-demo/internal/cv"
 	"github.com/117503445/goutils"
 	"github.com/go-vgo/robotgo"
@@ -13,6 +14,9 @@ import (
 )
 
 var logsDir string
+
+//go:embed version.json
+var versionInfo string
 
 func AltWCallback(e hook.Event) {
 	// TODO: 避免争抢
@@ -77,6 +81,8 @@ func AltFCallback(e hook.Event) {
 
 func main() {
 	goutils.InitZeroLog()
+
+	log.Info().Str("versionInfo", versionInfo).Msg("")
 
 	// runID as a unique identifier for the current run, example: 20240803.203942
 	runID := time.Now().Format("20060102.150405")

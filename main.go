@@ -49,6 +49,7 @@ func AltWCallback(e hook.Event) {
 				robotgo.Move(p.X/2, p.Y/2)
 				robotgo.Click()
 
+				// 等待加载
 				time.Sleep(1 * time.Second)
 
 				img := robotgo.CaptureImg()

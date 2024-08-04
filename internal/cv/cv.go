@@ -1,6 +1,7 @@
 package cv
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -55,6 +56,9 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{}, draw.Src)
 	points := []image.Point{}
 
+	// 在 4k 分辨率下，200% 缩放，黑色 白色 一般是 600 左右，这里设置 300 作为阈值
+	threshold := 300 * img.Bounds().Max.X / 3840 * img.Bounds().Max.Y / 2160
+
 	for r := 1; r <= 5; r++ {
 		for c := 1; c <= 4; c++ {
 			rect := DrawR(r, c)
@@ -80,8 +84,9 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 
 				}
 			}
-			log.Debug().Int("blackCount", blackCount).Int("whiteCount", whiteCount).Msg("color count")
-			if blackCount > 200 && whiteCount > 100 {
+			log.Debug().Int("blackCount", blackCount).Int("whiteCount", whiteCount).Int("threshold", threshold).Msg("count")
+
+			if blackCount > threshold && whiteCount > threshold {
 				// locked
 			} else {
 				points = append(points, image.Point{X: rect.Min.X, Y: rect.Min.Y})
@@ -92,12 +97,13 @@ func GetUnlockedPoints(img image.Image) []image.Point {
 	return points
 }
 
+// 获取遗器槽的坐标, 4k 分辨率 200% 缩放
 func GetRelicPoints() []image.Point {
 	points := []image.Point{}
 	// (269,280), (406,288)
 
 	for i := 0; i < 6; i++ {
-		x, y := 269 + 137*i, 280
+		x, y := 269+137*i, 280
 		points = append(points, image.Point{X: x, Y: y})
 	}
 

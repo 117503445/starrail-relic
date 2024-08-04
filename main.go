@@ -44,9 +44,10 @@ func AltWCallback(e hook.Event) {
 			robotgo.MoveClick(1472/2, 584/2)
 
 			img := robotgo.CaptureImg()
+			cvh := cv.NewCVHelper(img, logsDir)
 
 			// 轮换遗器槽
-			points := cv.GetRelicPoints(img)
+			points := cvh.GetRelicPoints()
 			for _, p := range points {
 				robotgo.Move(p.X, p.Y)
 				robotgo.Click()
@@ -62,9 +63,11 @@ func AltWCallback(e hook.Event) {
 				}
 
 				log.Debug().Str("imgFile", imgFile).Msg("CaptureImg")
+				
+				cvh = cv.NewCVHelper(img, logsDir)
 
 				// 选中当前未选中的遗器
-				points := cv.GetUnlockedPoints(img)
+				points := cvh.GetUnlockedPoints()
 				log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
 				for _, p := range points {
 					robotgo.Move(p.X, p.Y)

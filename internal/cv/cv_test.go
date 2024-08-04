@@ -3,11 +3,9 @@ package cv_test
 import (
 	"bytes"
 	"fmt"
-	// "os"
 	"testing"
 
 	"image"
-	// "image/draw"
 	_ "image/png"
 
 	_ "embed"
@@ -27,26 +25,14 @@ func TestImage(t *testing.T) {
 
 	ast := assert.New(t)
 
-	// img1 := image.
 	img, format, err := image.Decode(bytes.NewReader(fileImg1))
 	ast.NoError(err)
 	log.Debug().Str("format", format).Msg("image.Decode")
 
-	rgba := image.NewRGBA(img.Bounds())
-	pixel := rgba.At(1, 1)
-	r, g, b, a := pixel.RGBA()
-	log.Debug().Int("r", int(r)).Int("g", int(g)).Int("b", int(b)).Int("a", int(a)).Msg("pixel")
-	points := cv.GetUnlockedPoints(img)
+	cvh := cv.NewCVHelper(img, "./logs")
+
+	points := cvh.GetUnlockedPoints()
 
 	log.Debug().Interface("points", points).Msg("GetUnlockedPoints")
-
-	// // 创建输出文件
-	// outFile, err := os.Create("output.png")
-	// ast.NoError(err)
-	// defer outFile.Close()
-
-	// // 编码并保存图片
-	// err = png.Encode(outFile, rgba)
-	// ast.NoError(err)
 
 }

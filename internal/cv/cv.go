@@ -178,12 +178,12 @@ func rbgaToFile(img *image.RGBA, file string) {
 // 获取遗器槽的坐标, 1080p 分辨率下的绝对坐标
 func (cvh *CVHelper) GetRelicPoints() []image.Point {
 	points := []image.Point{}
-	// (269,280), (406,288)
+	// 4K: (269,280), (406,288)
 
 	for i := 0; i < 6; i++ {
 		x, y := 269+137*i, 280
 		// x, y = cvh.tranXFrom4KTo1080p(x), cvh.tranYFrom4KTo1080p(y)
-		x, y = x*1920/cvh.width(), y*1080/cvh.height()
+		x, y = x/2, y/2
 		points = append(points, image.Point{X: x, Y: y})
 	}
 

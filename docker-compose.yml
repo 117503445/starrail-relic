@@ -1,0 +1,14 @@
+services:
+  starrail-relic-dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+        - ./:/workspace
+        - /var/run/docker.sock:/var/run/docker.sock
+        - starrail-relic-dev-vsc:/root/.vscode-server
+    stdin_open: true
+    tty: true
+
+volumes:
+  starrail-relic-dev-vsc:

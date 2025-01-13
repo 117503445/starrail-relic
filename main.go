@@ -9,8 +9,10 @@ import (
 	"sync/atomic"
 
 	"github.com/117503445/goutils"
+	"github.com/117503445/starrail-relic/internal/cli"
 	"github.com/117503445/starrail-relic/internal/cv"
 	"github.com/117503445/starrail-relic/internal/lowos"
+	"github.com/alecthomas/kong"
 	"github.com/gen2brain/beeep"
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
@@ -63,7 +65,7 @@ func AltWCallback(e hook.Event) {
 				}
 
 				log.Debug().Str("imgFile", imgFile).Msg("CaptureImg")
-				
+
 				cvh = cv.NewCVHelper(img, logsDir)
 
 				// 选中当前未选中的遗器
@@ -121,6 +123,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	kong.Parse(&cli.Cli)
+	if !(1 <= cli.Cli.LockLines && cli.Cli.LockLines <= 5) {
+		log.Fatal().Int("LockLines", cli.Cli.LockLines).Msg("1 <= LockLines <= 5")
+	}
+
 	// runID as a unique identifier for the current run, example: 20240803.203942
 	runID := time.Now().Format("20060102.150405")
 
@@ -132,7 +139,7 @@ func main() {
 	fmt.Println(`使用方法:
 	alt + a: 退出程序
 	alt + f: 解锁所有遗器。请先打开星穹铁道，进入 背包 - 遗器 页面，筛选 - 状态 - 已锁定，再按下 alt + f 快捷键。当所有遗器都被解锁后，按下 alt + a 退出程序。
-	alt + w: 锁定每个角色前 20 个推荐的遗器。请先打开星穹铁道，进入 角色详情 - 第一个角色 - 遗器 页面，再按下 alt + w 快捷键。当所有遗器都被锁定后，按下 alt + a 退出程序。
+	alt + w: 锁定每个角色前 3 行（可配置）推荐的遗器。请先打开星穹铁道，进入 角色详情 - 第一个角色 - 遗器 页面，再按下 alt + w 快捷键。当所有遗器都被锁定后，按下 alt + a 退出程序。
 	`)
 
 	robotgo.MouseSleep = 200

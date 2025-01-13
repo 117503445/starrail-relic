@@ -4,17 +4,19 @@ go 1.22.5
 
 require (
 	github.com/117503445/goutils v0.0.0-20240727145325-52e6159fc3a2
+	github.com/alecthomas/kong v1.6.1
+	github.com/gen2brain/beeep v0.0.0-20240516210008-9c006672e7f4
 	github.com/go-vgo/robotgo v1.0.0-rc2.1
 	github.com/robotn/gohook v0.41.0
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.9.0
+	golang.org/x/sys v0.22.0
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/gen2brain/beeep v0.0.0-20240516210008-9c006672e7f4 // indirect
 	github.com/gen2brain/shm v0.1.0 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4 // indirect
@@ -55,6 +57,5 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

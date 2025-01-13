@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/117503445/starrail-relic/internal/cli"
 	"github.com/rs/zerolog/log"
 )
 
@@ -108,8 +109,8 @@ func (cvh *CVHelper) GetUnlockedPoints() []image.Point {
 	// 这里设置 100 作为阈值
 	threshold := 100 * cvh.width() / 3840 * cvh.height() / 2160
 
-	for r := 1; r <= 5; r++ {
-		for c := 1; c <= 4; c++ {
+	for r := 1; r <= cli.Cli.LockLines; r++ { // row
+		for c := 1; c <= 4; c++ { // column
 			rect := cvh.getRect(r, c)
 
 			blackCount := 0
